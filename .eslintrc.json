@@ -55,6 +55,7 @@
       }
     ],
     "no-unused-vars": "off",
+    "no-undef": "off",
     "react/prop-types": 0,
     "react/display-name": 0
   },
