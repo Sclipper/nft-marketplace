@@ -6,15 +6,29 @@ const colors = {
   transparent: 'transparent',
   black: '#000',
   white: '#fff',
-  error: '#E71D36',
-  success: '#32936F',
+  error: {
+    main: '#E71D36',
+    dark_main: '#B40003',
+  },
+  success: {
+    main: '#32936F',
+    dark_main: '#00603C',
+  },
   primary: {
-    default: '#24A5A9',
-    _dark: '#1d787a',
+    light: '#57D8DC',
+    main: '#24A5A9',
+    dark: '#0B8C90',
+    dark_light: '#007276',
+    dark_main: '#00595D',
+    dark_dark: '#003F43',
   },
   secondary: {
-    default: '#F9888E',
-    _dark: '#c46d72',
+    light: '#FFA2A8',
+    main: '#F9888E',
+    dark: '#E06F75',
+    dark_light: '#AD3C42',
+    dark_main: '#932228',
+    dark_dark: '#7A090F',
   },
   gray: {
     50: '#F7FAFC',
@@ -52,7 +66,7 @@ const fonts = {
 
 const config: ThemeConfig = {
   initialColorMode: 'light',
-  useSystemColorMode: true,
+  useSystemColorMode: false,
 }
 
 const theme = extendTheme({ colors, config, components, fonts })
