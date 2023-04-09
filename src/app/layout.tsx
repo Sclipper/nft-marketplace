@@ -3,7 +3,7 @@
 import { CacheProvider } from '@chakra-ui/next-js'
 import { Box, ChakraProvider, ColorModeScript } from '@chakra-ui/react'
 import * as React from 'react'
-import Fonts from './Fonts'
+// import Fonts from './Fonts'
 import theme from '../theme'
 import Header from './components/Header'
 
@@ -19,7 +19,7 @@ export default function RootLayout({
           <ColorModeScript initialColorMode={theme.config.initialColorMode} />
           <ChakraProvider theme={theme}>
             <Box>
-              <Fonts />
+              {/* <Fonts /> */}
               <Header />
               {children}
             </Box>
