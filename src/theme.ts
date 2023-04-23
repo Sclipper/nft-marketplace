@@ -4,10 +4,9 @@ import { mode } from '@chakra-ui/theme-tools'
 import { inputAnatomy } from '@chakra-ui/anatomy'
 import { createMultiStyleConfigHelpers } from '@chakra-ui/react'
 
-const {
-  definePartsStyle,
-  defineMultiStyleConfig,
-} = createMultiStyleConfigHelpers(inputAnatomy.keys)
+const { definePartsStyle, defineMultiStyleConfig } = createMultiStyleConfigHelpers(
+  inputAnatomy.keys
+)
 
 const baseStyle = definePartsStyle({
   field: {
@@ -65,10 +64,10 @@ const colors = {
   },
 }
 const breakpoints = {
-  sm: '30em',
-  md: '48em',
-  lg: '62em',
-  xl: '80em',
+  sm: '48em', // 768px
+  md: '79em',
+  lg: '80em', // 1280px
+  xl: '96em', // 1536px
 }
 
 const spacing = {
@@ -124,8 +123,7 @@ const components = {
 }
 
 const fonts = {
-  heading:
-    '"Readex Pro", "Roboto", "Helvetica", "Arial", sans-serif',
+  heading: '"Readex Pro", "Roboto", "Helvetica", "Arial", sans-serif',
   body: '"Readex Pro", "Roboto", "Helvetica", "Arial", sans-serif',
   mono: '"Readex Pro", "Roboto", "Helvetica", "Arial", sans-serif',
 }
@@ -136,6 +134,11 @@ const config: ThemeConfig = {
 }
 
 const theme = extendTheme({
-  colors, config, components, fonts, breakpoints, spacing,
+  colors,
+  config,
+  components,
+  fonts,
+  breakpoints,
+  spacing,
 })
 export default theme

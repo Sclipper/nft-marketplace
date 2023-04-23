@@ -7,26 +7,23 @@ import * as React from 'react'
 import theme from '../theme'
 import Header from './components/Header'
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body style={{ height: '100vh' }}>
         <CacheProvider>
           <ColorModeScript initialColorMode={theme.config.initialColorMode} />
           <ChakraProvider theme={theme}>
-            <Box>
-              {/* <Fonts /> */}
+            <>
               <Header />
-              {children}
-            </Box>
+              <Box>
+                {/* <Fonts /> */}
+                {children}
+              </Box>
+            </>
           </ChakraProvider>
         </CacheProvider>
       </body>
     </html>
-
   )
 }
