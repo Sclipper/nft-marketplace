@@ -16,14 +16,8 @@ import { headerContainer, logo, searchBox } from './Header.style'
 function Header() {
   const { colorMode, toggleColorMode } = useColorMode()
   return (
-    <HStack
-      sx={headerContainer}
-    >
-      <Image
-        sx={logo}
-        src="/logo.png"
-        alt="Site Logo"
-      />
+    <HStack sx={headerContainer}>
+      <Image sx={logo} src="/logo.png" alt="Site Logo" />
       <InputGroup sx={searchBox}>
         <InputLeftElement pointerEvents="none">
           <BiSearch color="gray.700" />
@@ -35,15 +29,11 @@ function Header() {
         />
       </InputGroup>
       <HStack spacing={3}>
-        {
-          menuItems.map((item) => (
-            <NextLink key={item.link} href={item.link} legacyBehavior passHref>
-              <Link>
-                {item.content}
-              </Link>
-            </NextLink>
-          ))
-        }
+        {menuItems.map((item) => (
+          <NextLink key={item.link} href={item.link} legacyBehavior passHref>
+            <Link>{item.content}</Link>
+          </NextLink>
+        ))}
         <IconButton
           onClick={toggleColorMode}
           isRound

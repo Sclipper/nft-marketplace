@@ -1,43 +1,56 @@
 'use client'
 
 import * as React from 'react'
-import { Grid, GridItem, Image, Stack, Text } from '@chakra-ui/react'
+import { Grid, GridItem, Stack, Text } from '@chakra-ui/react'
 
 import { ethers } from 'ethers'
-import Web3Modal from 'web3modal'
 import { nftAddress, nftMarketAddress } from './configs'
 
 import NFT from '../../artifacts/contracts/NFT.sol/NFT.json'
 import Market from '../../artifacts/contracts/NFTMarket.sol/NFTMarket.json'
 import { ImageBox } from './components'
+import { Stat } from './components/componentTypes'
 
+type Item = {
+  price: string
+  tokenId: number
+  seller: string
+  owner: string
+  image: string
+  name: string
+  description: string
+}
 export default function Home() {
-  const [nfts, setNfts] = React.useState([])
+  const [nfts, setNfts] = React.useState<Item[]>([])
 
-  // const loadNFTs = async () => {
-  //   const provider = new ethers.providers.JsonRpcProvider()
-  //   const tokenContract = new ethers.Contract(nftAddress, NFT.abi, provider)
-  //   const marketContract = new ethers.Contract(nftMarketAddress, Market.abi, provider)
-  //   const data = await marketContract.fetchMarketItems()
+  const loadNFTs = async () => {
+    const provider = new ethers.providers.JsonRpcProvider()
+    const tokenContract = new ethers.Contract(nftAddress, NFT.abi, provider)
+    const marketContract = new ethers.Contract(nftMarketAddress, Market.abi, provider)
+    const data = await marketContract.fetchMarketItems() // TODO: Type this
+    console.log('data', data)
 
-  //   const items = await Promise.all(data.map(async (i) => {
-  //     const tokenUri = await tokenContract.tokenURI(i.tokenId)
-  //     const meta = await fetch(tokenUri).then((res) => res.json())
-  //     const price = ethers.utils.formatUnits(i.price.toString(), 'ether')
-  //     const item = {
-  //       price,
-  //       tokenId: i.tokenId.toNumber(),
-  //       seller: i.seller,
-  //       owner: i.owner,
-  //       image: meta.image,
-  //       name: meta.data.name,
-  //       description: meta.data.description,
-  //     }
-  //     return item
-  //   }))
-  //   setNfts(items)
-  //   console.log('items', items)
-  // }
+    const items: Item[] = await Promise.all(
+      data.map(async (item: any) => {
+        console.log('item', item)
+        const tokenUri = await tokenContract.tokenURI(item.tokenId)
+        const meta = await fetch(tokenUri).then((res) => res.json())
+        const price = ethers.utils.formatUnits(item.price.toString(), 'ether')
+        const newItem = {
+          price,
+          tokenId: item.tokenId.toNumber(),
+          seller: item.seller,
+          owner: item.owner,
+          image: meta.image,
+          name: meta.data.name,
+          description: meta.data.description,
+        } as Item
+        return newItem
+      })
+    )
+    setNfts(items)
+    console.log('items', items)
+  }
 
   // const buyNft = async (nft) => {
   //   const web3Modal = new Web3Modal()
@@ -57,9 +70,38 @@ export default function Home() {
   //   loadNFTs()
   // }
 
-  // React.useEffect(() => {
-  //   loadNFTs()
-  // }, [])
+  React.useEffect(() => {
+    loadNFTs()
+  }, [])
+  const stats = [
+    {
+      key: 'items',
+      type: 'number',
+      value: 18100,
+    },
+    {
+      key: 'owners',
+      type: 'number',
+      value: 12800,
+    },
+    {
+      key: 'listed',
+      type: 'percent',
+      value: 0.9,
+    },
+    {
+      key: 'floor',
+      type: 'currency',
+      currency: 'eth',
+      value: 0.01,
+    },
+    {
+      key: 'volume',
+      type: 'currency',
+      currency: 'eth',
+      value: 528.6,
+    },
+  ] as Stat[]
 
   const featureProjects = [
     {
@@ -73,12 +115,7 @@ export default function Home() {
       },
       text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod',
       title: 'Collection 1',
-      stats: {
-        items: 1,
-        owners: 1,
-        listed: 1,
-        floorPrice: 1,
-      },
+      stats,
     },
     {
       image: {
@@ -90,13 +127,8 @@ export default function Home() {
         alt: 'image',
       },
       text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod',
-      title: 'Collection 1',
-      stats: {
-        items: 1,
-        owners: 1,
-        listed: 1,
-        floorPrice: 1,
-      },
+      title: 'Collection 2',
+      stats,
     },
     {
       image: {
@@ -108,19 +140,13 @@ export default function Home() {
         alt: 'image',
       },
       text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod',
-      title: 'Collection 1',
-      stats: {
-        items: 1,
-        owners: 1,
-        listed: 1,
-        floorPrice: 1,
-      },
+      title: 'Collection 3',
+      stats,
     },
   ]
-
   return (
     <Stack sx={{ width: '100%', alignItems: 'center', my: 14 }}>
-      <Stack sx={{ maxWidth: '90%' }}>
+      <Stack sx={{ maxWidth: ['95%', '90%', '73%'] }}>
         <Text sx={{ fontSize: '2xl', fontWeight: 'bold' }}>Featured Projects</Text>
         <Grid templateColumns={['1fr', 'repeat(2, 1fr)', 'repeat(3, 1fr)']} gap={6}>
           {featureProjects.map((project) => (
