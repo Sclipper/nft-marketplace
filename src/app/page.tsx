@@ -27,14 +27,17 @@ export default function Home() {
     const provider = new ethers.providers.JsonRpcProvider()
     const tokenContract = new ethers.Contract(nftAddress, NFT.abi, provider)
     const marketContract = new ethers.Contract(nftMarketAddress, Market.abi, provider)
+
     const data = await marketContract.fetchMarketItems() // TODO: Type this
     console.log('data', data)
 
     const items: Item[] = await Promise.all(
       data.map(async (item: any) => {
-        console.log('item', item)
         const tokenUri = await tokenContract.tokenURI(item.tokenId)
+        console.log('tokenUri', tokenUri)
         const meta = await fetch(tokenUri).then((res) => res.json())
+
+        console.log('meta', meta)
         const price = ethers.utils.formatUnits(item.price.toString(), 'ether')
         const newItem = {
           price,
@@ -42,8 +45,8 @@ export default function Home() {
           seller: item.seller,
           owner: item.owner,
           image: meta.image,
-          name: meta.data.name,
-          description: meta.data.description,
+          name: meta.name,
+          description: meta.description,
         } as Item
         return newItem
       })
@@ -149,7 +152,7 @@ export default function Home() {
       <Stack sx={{ maxWidth: ['95%', '90%', '73%'] }}>
         <Text sx={{ fontSize: '2xl', fontWeight: 'bold' }}>Featured Projects</Text>
         <Grid templateColumns={['1fr', 'repeat(2, 1fr)', 'repeat(3, 1fr)']} gap={6}>
-          {featureProjects.map((project) => (
+          {/* {featureProjects.map((project) => (
             <GridItem key={project.title}>
               <ImageBox
                 image={project.image}
@@ -159,7 +162,7 @@ export default function Home() {
                 title={project.title}
               />
             </GridItem>
-          ))}
+          ))} */}
         </Grid>
       </Stack>
     </Stack>

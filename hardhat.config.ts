@@ -8,11 +8,11 @@ module.exports = {
     },
     mumbai: {
       url: `https://polygon-mumbai.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_PROJECT_ID}`,
-      accounts: [process.env.WALLET_KEY as string],
+      accounts: [process.env.NEXT_PUBLIC_WALLET_KEY as string],
     },
     mainnet: {
       url: `https://polygon-mainnert.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_PROJECT_ID}`,
-      accounts: [process.env.WALLET_KEY as string],
+      accounts: [process.env.NEXT_PUBLIC_WALLET_KEY as string],
     },
   },
   solidity: '0.8.17',
