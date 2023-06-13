@@ -3,30 +3,22 @@
 import * as React from 'react'
 import { useRouter } from 'next/navigation'
 
-import {
-  Button,
-  FormControl,
-  Input,
-  Stack,
-  Text,
-  Textarea,
-  useToast,
-} from '@chakra-ui/react'
+import { Button, Input, Stack, Text, Textarea, useToast } from '@chakra-ui/react'
 import FormEntry from './components/FormEntry'
 import ImageDropzone from './components/ImageDropzone'
 import { createItem } from './CreateController'
+import { ArrayBufferFile } from './Create.types'
 
 function CreatePage() {
   const toast = useToast()
   const router = useRouter()
-  const [imageFile, setImageFile] = React.useState<File>()
+  const [imageFile, setImageFile] = React.useState<ArrayBufferFile>()
   const [formState, setFormState] = React.useState({
     image: '',
     name: '',
     description: '',
     price: '',
   })
-
   const handleFormState = (item: keyof typeof formState, value: string) => {
     setFormState({ ...formState, [item]: value })
   }
@@ -128,39 +120,3 @@ function CreatePage() {
 }
 
 export default CreatePage
-
-/* <div className="flex justify-center">
-        <div className="w-1/2 flex flex-col pb-12">
-          <input
-            placeholder="Asset Name"
-            className="mt-8 border rounded p-4"
-            onChange={(e) => updateFormInput({ ...formInput, name: e.target.value })}
-          />
-          <textarea
-            placeholder="Asset Description"
-            className="mt-2 border rounded p-4"
-            onChange={(e) =>
-              updateFormInput({ ...formInput, description: e.target.value })
-            }
-          />
-          <input
-            placeholder="Asset Price in Matic"
-            className="mt-2 border rounded p-4"
-            onChange={(e) => updateFormInput({ ...formInput, price: e.target.value })}
-          />
-          <input
-            type="file"
-            name="Asset"
-            className="my-4"
-            onChange={(e) => handleImageChange({ e, setFileUrl })}
-          />
-          {fileUrl && <img className="rounded mt-4" width="350" src={fileUrl} />}
-          <button
-            type="button"
-            onClick={handleCreateItem}
-            className="font-bold mt-4 bg-pink-500 text-white rounded p-4 shadow-lg"
-          >
-            Create Digital Asset
-          </button>
-        </div>
-      </div> */

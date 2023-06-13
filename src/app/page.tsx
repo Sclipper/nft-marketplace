@@ -1,15 +1,12 @@
 'use client'
 
 import * as React from 'react'
-import { Grid, GridItem, Stack, Text } from '@chakra-ui/react'
+import { Stack, Text } from '@chakra-ui/react'
 
 import { ethers } from 'ethers'
-import { nftAddress, nftMarketAddress } from './configs'
 
-import NFT from '../../artifacts/contracts/NFT.sol/NFT.json'
-import Market from '../../artifacts/contracts/NFTMarket.sol/NFTMarket.json'
-import { ImageBox } from './components'
-import { Stat } from './components/componentTypes'
+import { NftBox } from './components'
+import { useGlobal } from './globalContext'
 
 type Item = {
   price: string
@@ -22,22 +19,21 @@ type Item = {
 }
 export default function Home() {
   const [nfts, setNfts] = React.useState<Item[]>([])
+  const { state } = useGlobal()
+  const { marketContract, tokenContract } = state
 
   const loadNFTs = async () => {
-    const provider = new ethers.providers.JsonRpcProvider()
-    const tokenContract = new ethers.Contract(nftAddress, NFT.abi, provider)
-    const marketContract = new ethers.Contract(nftMarketAddress, Market.abi, provider)
+    // const provider = new ethers.providers.JsonRpcProvider()
+    // const tokenContract = new ethers.Contract(nftAddress, NFT.abi, provider)
+    // const marketContract = new ethers.Contract(nftMarketAddress, Market.abi, provider)
 
     const data = await marketContract.fetchMarketItems() // TODO: Type this
-    console.log('data', data)
-
     const items: Item[] = await Promise.all(
       data.map(async (item: any) => {
         const tokenUri = await tokenContract.tokenURI(item.tokenId)
-        console.log('tokenUri', tokenUri)
         const meta = await fetch(tokenUri).then((res) => res.json())
+        // .catch((err) => console.log('no meta', err))
 
-        console.log('meta', meta)
         const price = ethers.utils.formatUnits(item.price.toString(), 'ether')
         const newItem = {
           price,
@@ -52,7 +48,6 @@ export default function Home() {
       })
     )
     setNfts(items)
-    console.log('items', items)
   }
 
   // const buyNft = async (nft) => {
@@ -76,94 +71,29 @@ export default function Home() {
   React.useEffect(() => {
     loadNFTs()
   }, [])
-  const stats = [
-    {
-      key: 'items',
-      type: 'number',
-      value: 18100,
-    },
-    {
-      key: 'owners',
-      type: 'number',
-      value: 12800,
-    },
-    {
-      key: 'listed',
-      type: 'percent',
-      value: 0.9,
-    },
-    {
-      key: 'floor',
-      type: 'currency',
-      currency: 'eth',
-      value: 0.01,
-    },
-    {
-      key: 'volume',
-      type: 'currency',
-      currency: 'eth',
-      value: 528.6,
-    },
-  ] as Stat[]
 
-  const featureProjects = [
-    {
-      image: {
-        src: '/test.jpeg',
-        alt: 'image',
-      },
-      thumbnail: {
-        src: '/test_child.jpeg',
-        alt: 'image',
-      },
-      text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod',
-      title: 'Collection 1',
-      stats,
-    },
-    {
-      image: {
-        src: '/test.jpeg',
-        alt: 'image',
-      },
-      thumbnail: {
-        src: '/test_child.jpeg',
-        alt: 'image',
-      },
-      text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod',
-      title: 'Collection 2',
-      stats,
-    },
-    {
-      image: {
-        src: '/test.jpeg',
-        alt: 'image',
-      },
-      thumbnail: {
-        src: '/test_child.jpeg',
-        alt: 'image',
-      },
-      text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod',
-      title: 'Collection 3',
-      stats,
-    },
-  ]
+  console.log('nfts', nfts)
   return (
     <Stack sx={{ width: '100%', alignItems: 'center', my: 14 }}>
       <Stack sx={{ maxWidth: ['95%', '90%', '73%'] }}>
-        <Text sx={{ fontSize: '2xl', fontWeight: 'bold' }}>Featured Projects</Text>
-        <Grid templateColumns={['1fr', 'repeat(2, 1fr)', 'repeat(3, 1fr)']} gap={6}>
-          {/* {featureProjects.map((project) => (
-            <GridItem key={project.title}>
-              <ImageBox
-                image={project.image}
-                thumbnail={project.thumbnail}
-                text={project.text}
-                stats={project.stats}
-                title={project.title}
+        {nfts.length === 0 ? (
+          <Text sx={{ fontSize: '2xl', fontWeight: 'bold' }}>
+            No items in marketplace yet. Please create an item.
+          </Text>
+        ) : (
+          <Stack spacing={4} direction="row" flexWrap="wrap">
+            {nfts?.map((item) => (
+              <NftBox
+                key={item.tokenId}
+                id={item.tokenId}
+                name={item.name}
+                image={item.image}
+                description={item.description}
+                price={item.price}
               />
-            </GridItem>
-          ))} */}
-        </Grid>
+            ))}
+          </Stack>
+        )}
       </Stack>
     </Stack>
   )
